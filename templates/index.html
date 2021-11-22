@@ -1,0 +1,177 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Slide Sign In/Sign Up form</title>
+  <!--Bootstrap cdn-->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<script>
+	const validate=()=>{
+		if(!form1.name.value)
+		{
+			alert("Enter your name")	
+			return
+		}
+		if(!form1.email.value)
+		{
+			alert("Enter your email ID")
+			return
+		}
+		if(!form1.password.value)
+		{
+			alert("Enter your password")
+			return
+		}
+		if(!form1.confirmpassword.value)
+		{
+			alert("Retype your password")
+			return
+		}
+		if(form1.password.value!=form1.confirmpassword.value)
+		{
+			alert("Passwords do not match")
+			return
+		}
+		if(form1.name.value.length<=5)
+		{
+			alert("Username should have 6 or more characters")
+			return
+		}
+		if(form1.password.value.length<=5)
+		{
+			alert("Password should have 6 or more characters")
+			return
+		}
+		if(!form1.email.value.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/))
+		{
+			alert("Enter a valid email ID")
+			return
+		}
+		//your code here
+        const csrf = "{{ csrf_token }}";
+		$.ajax({
+			type:"POST",
+			url:"/signup",
+            
+			data:{
+				"name":form1.name.value,
+				"email":form1.email.value,
+				"password":form1.password.value,
+                "csrfmiddlewaretoken":csrf,
+                "confirm":form1.confirmpassword.value,
+                
+			},
+			dataType:"json",
+			success:function(response){
+				var s= response.success;
+				alert("user created successfully")
+			},
+			failure:function(){
+				alert("failure")
+			}
+		})
+	}	
+	const validate1=()=>{
+		if(!form2.email.value)
+		{
+			alert("Enter your email ID")
+			return
+		}
+		if(!form2.password.value)
+		{
+			alert("Enter your password")
+			return
+		}
+		if(!form2.email.value.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/))
+		{
+			alert("Enter a valid email ID")
+			return
+		}
+		//your code here
+        const csrf = "{{ csrf_token }}";
+		$.ajax({
+			type:"POST",
+			url:"signin",
+			data:{
+				"email":form2.email.value,
+				"password":form2.password.value,
+                "csrfmiddlewaretoken":csrf,
+			},
+			dataType:"json",
+			success:function(response){
+				var success = response.redirect;
+				console.log("hello")
+				if(success == "True"){
+					console.log("hi")
+					window.location = "{% url 'sigin_redirect' %}"
+					
+				}
+				else{
+					alert("enter valid username and password")
+				}
+				
+			},
+			failure:function(){
+				alert("failure")
+			}
+		})
+	}
+</script>
+</head>
+<body>
+<!-- partial:index.partial.html -->
+{% if messages %}
+	{%for message in messages%}
+	<p>{{message}}</p>
+	{% endfor %}
+	{% endif %}
+{% csrf_token %}
+<div class="container right-panel-active">
+	<!-- Sign Up -->
+	<div class="container__form container--signup">
+		<form action="#" class="form" id="form1" onsubmit="validate()">
+			<h2 class="form__title">Sign Up</h2>
+			<input type="text" name="name" placeholder="Enter your name" class="input" />
+			<input type="email" name="email" placeholder=" Enter your email ID" class="input" />
+			<input type="password" name="password" placeholder="Enter your password" class="input" />
+			<input type="password" name="confirmpassword" placeholder="Retype your password" class="input" />
+			<input class="btn" type="submit" value="Sign Up">
+		</form>
+	</div>
+
+	<!-- Sign In -->
+	<div class="container__form container--signin">
+		<form action="#" class="form" id="form2" onsubmit="validate1()">
+			<h2 class="form__title">Sign In</h2>
+			<input type="email" name="email" placeholder="Enter your email ID" class="input" />
+			<input type="password" name="password" placeholder="Enter your password" class="input" />
+			<a href="/changepass" class="link">Forgot your password?</a>
+			<input type="submit" class="btn" value="Sign In">
+		</form>
+	</div>
+
+	<!-- Overlay -->
+	<div class="container__overlay">
+		<div class="overlay">
+			<div class="overlay__panel overlay--left">
+				<button class="btn" id="signIn">Sign In</button>
+			</div>
+			<div class="overlay__panel overlay--right">
+				<button class="btn" id="signUp">Sign Up</button>
+			</div>
+		</div>
+	</div>
+	
+</div>
+<!-- partial -->
+
+    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+  <script  src="{% static 'js/script.js' %}"></script>
+
+</body>
+</html>
