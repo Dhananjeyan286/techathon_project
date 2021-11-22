@@ -69,7 +69,7 @@
 			dataType:"json",
 			success:function(response){
 				var s= response.success;
-				alert("user created successfully")
+				alert("User created successfully. Now Sign In.")
 			},
 			failure:function(){
 				alert("failure")
@@ -125,11 +125,7 @@
 </head>
 <body>
 <!-- partial:index.partial.html -->
-{% if messages %}
-	{%for message in messages%}
-	<p>{{message}}</p>
-	{% endfor %}
-	{% endif %}
+
 {% csrf_token %}
 <div class="container right-panel-active">
 	<!-- Sign Up -->

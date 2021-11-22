@@ -47,6 +47,7 @@ def signin_redirect(request):
     email = request.session.get('email')
     obj = user.objects.get(email_id = email)
     is_admin = obj.admin
+   
     return render(request,"homepage.html",{"user":obj,"is_admin":is_admin})
 def send_otp(request):
     if request.method == 'POST':
@@ -90,15 +91,15 @@ def new_pass(request):
         password = request.POST['password']
         con_password = request.POST['confirmpassword']
         if not(password):
-            messages.error(request,"enter the password")
+            messages.error(request,"Enter the password")
             return redirect('/request_changepass')
             
         elif not(con_password):
-            messages.error(request,'enter the confirm password')
+            messages.error(request,'Enter the confirm password')
             return redirect('/request_changepass')
             
         elif password != con_password:
-            messages.error(request,'password and confirm password do not match')
+            messages.error(request,'Password and confirm password do not match')
             return redirect('/request_changepass')
             
         
@@ -126,7 +127,7 @@ def logout(request):
         del request.session['email']
     except KeyError:
         pass
-    messages.error(request,'you are logged out successfully')
+
     return render(request,'index.html')
 def change(request):
     email = request.POST['email']
@@ -136,10 +137,10 @@ def change(request):
     print(type_user)
     print(email)
     if type_user=='normal':
-        messages.error(request,'do you wanna change this user to premium user')
+        messages.error(request,'Do you wanna change this user to Premium user ?')
         return redirect('/users_details')
     else:
-        messages.error(request,'do you wanna change this user to normal user')
+        messages.error(request,'Do you wanna change this user to Normal user ?')
         return redirect('/users_details')
 def change_user(request):
     email = request.session.get('change_user')
